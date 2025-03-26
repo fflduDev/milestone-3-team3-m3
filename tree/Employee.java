@@ -11,7 +11,13 @@ public class Employee implements Comparable<Employee> {
 	private Integer id;
 	private String position;
 	
- 	public String getName() {
+ 	public Employee(String string, int id, String string2) {
+		this.name = string;
+		this.id = id;
+		this.position = string2;}
+
+
+	public String getName() {
 		return name;
 	}
 
