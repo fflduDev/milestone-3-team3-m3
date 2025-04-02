@@ -22,15 +22,13 @@ public class OrgChartImpl implements OrgChart{
 
 	@Override
 	public void addDirectReport(Employee manager, Employee newPerson) {
-		// find the manager
-		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
-			if (node.data.equals(manager)) {									//if the node's data is equal to the name of the manager	
-				node.addChild(new GenericTreeNode<Employee>(newPerson));		//add the new person as a child of the manager
+		for (GenericTreeNode<Employee> node : nodes) {								//for each node in the list of nodes
+			if (node.data.equals(manager)) {										//if the node's data is equal to the manager's name
+				node.addChild(new GenericTreeNode<Employee>(newPerson));			//add the new person as a child of the manager
 			}
 		}
-		System.out.println("Manager not found. Please ensure the name of the manager is correct");
+		nodes.add(new GenericTreeNode<Employee>(newPerson));						//add the new person to the list of nodes
 	}
-
 	@Override
 	public void removeEmployee(Employee firedPerson) {
 		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
@@ -40,6 +38,45 @@ public class OrgChartImpl implements OrgChart{
 			
 
 		}
+	}
+
+	@Override
+	public void showOrgChartDepthFirst() {
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
+		System.out.println("Displaying Depth Org Chart");					//print a message to indicate the org chart has been shown
+		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
+			System.out.println(node.data);										//print the node's data
+			if(node.children != null) {											//if the node has no children
+				break;														//continue to the next node
+			} else {
+				System.out.println("No children");							//print a message to indicate the node has no children
+
+			}
+
+			for (GenericTreeNode<Employee> child : node.children) {				//for each child of the node
+				System.out.println(child.data);									//print the child's data
+			}
+		}
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
+		System.out.println(" ");
+	}
+
+	@Override
+	public void showOrgChartBreadthFirst() {
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
+		System.out.println("Displayiing Breadth Org Chart");
+		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
+			System.out.println(node.data);										//print the node's data
+			if(node.children == null) {											//if the node has no children
+				continue;														//continue to the next node
+			}
+
+			for (GenericTreeNode<Employee> child : node.children) {				//for each child of the node
+				System.out.println(child.data);									//print the child's data
+			}
+		}
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
+		System.out.println(" ");
 	}
 	
 }

@@ -10,8 +10,11 @@ public class GenericTreeNode<E> {
 		data = theItem;
 	}
 	
-	public void addChild(GenericTreeNode<E> theItem) {
-		children.add(theItem);
+	public void addChild(GenericTreeNode<E> child) {
+		if (children == null) {
+			children = new ArrayList<GenericTreeNode<E>>();
+		}
+		children.add(child);
 	}
 	
 	public void removeChild(E theItem) {
