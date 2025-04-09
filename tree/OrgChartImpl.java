@@ -29,54 +29,49 @@ public class OrgChartImpl implements OrgChart{
 		}
 		nodes.add(new GenericTreeNode<Employee>(newPerson));						//add the new person to the list of nodes
 	}
+	
 	@Override
 	public void removeEmployee(Employee firedPerson) {
 		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
 			if (node.data.equals(firedPerson)) {								//if the node's data is equal to the name of the fired person
 				nodes.remove(node);												//remove the node
 			}
-			
-
 		}
 	}
 
 	@Override
 	public void showOrgChartDepthFirst() {
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
-		System.out.println("Displaying Depth Org Chart");					//print a message to indicate the org chart has been shown
-		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
-			System.out.println(node.data);										//print the node's data
-			if(node.children != null) {											//if the node has no children
-				break;														//continue to the next node
-			} else {
-				System.out.println("No children");							//print a message to indicate the node has no children
+		System.out.println("Displaying Depth Org Chart");
 
-			}
+		// Start depth-first traversal from the root node
+		depthFirstTraversal(nodes.get(0));
+	}
 
-			for (GenericTreeNode<Employee> child : node.children) {				//for each child of the node
-				System.out.println(child.data);									//print the child's data
+	private void depthFirstTraversal(GenericTreeNode<Employee> node) { // Print the current node
+		System.out.println(node.data);
+
+		if (node.children != null) { // Check if the node has children
+			
+			for (GenericTreeNode<Employee> child : node.children) { // Recursively traverse each child
+
+				depthFirstTraversal(child);
 			}
 		}
-		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
-		System.out.println(" ");
+		
 	}
 
 	@Override
 	public void showOrgChartBreadthFirst() {
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
-		System.out.println("Displayiing Breadth Org Chart");
+		System.out.println("Displaying Breadth Org Chart");
 		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
 			System.out.println(node.data);										//print the node's data
-			if(node.children == null) {											//if the node has no children
-				continue;														//continue to the next node
-			}
-
 			for (GenericTreeNode<Employee> child : node.children) {				//for each child of the node
-				System.out.println(child.data);									//print the child's data
+				System.out.print(child.data + "   ");							//print the child's data
 			}
 		}
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
 		System.out.println(" ");
 	}
-	
 }
