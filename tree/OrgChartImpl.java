@@ -1,7 +1,9 @@
 package tree;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
+import java.util.Queue;
 
 public class OrgChartImpl implements OrgChart{
 
@@ -22,39 +24,85 @@ public class OrgChartImpl implements OrgChart{
 
 	@Override
 	public void addDirectReport(Employee manager, Employee newPerson) {
-		for (GenericTreeNode<Employee> node : nodes) {								//for each node in the list of nodes
-			if (node.data.equals(manager)) {										//if the node's data is equal to the manager's name
-				node.addChild(new GenericTreeNode<Employee>(newPerson));			//add the new person as a child of the manager
+		for (GenericTreeNode<Employee> node : nodes) {
+			if (node.data.equals(manager)) {
+				GenericTreeNode<Employee> child = new GenericTreeNode<>(newPerson);
+				node.addChild(child); // correctly attach to parent
+				nodes.add(child);     // keep track of it in the nodes list
+				return;               // stop after adding
 			}
 		}
-		nodes.add(new GenericTreeNode<Employee>(newPerson));						//add the new person to the list of nodes
 	}
 	
 	@Override
 	public void removeEmployee(Employee firedPerson) {
-		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
-			if (node.data.equals(firedPerson)) {								//if the node's data is equal to the name of the fired person
-				nodes.remove(node);												//remove the node
+		GenericTreeNode<Employee> toRemove = null;
+		GenericTreeNode<Employee> parent = null;
+
+		for (GenericTreeNode<Employee> node : nodes) {							//Find the node to remove and its parent
+			if (node.data.equals(firedPerson)) {								//If the node is the root, set toRemove to the node
+				toRemove = node;
+				break;
+			}
+			if (node.children != null) {										//If the node has children
+				for (GenericTreeNode<Employee> child : node.children) {
+					if (child.data.equals(firedPerson)) {						//If the child is the one to remove, set toRemove to the child
+						toRemove = child;
+						parent = node;
+						break;
+					}
+				}
+			}
+			if (toRemove != null) break;
+		}
+	
+		if (toRemove == null){
+			return;
+		} 
+	
+		
+		if (parent != null) {												//If it has a parent, transfer children and remove from parent's list
+			if (toRemove.children != null) {								//If the node toRemove has children
+				for (GenericTreeNode<Employee> child : toRemove.children) {	//For each child of the node to remove
+					parent.addChild(child);									//Add the child to the parent
+				}
+			}
+			parent.children.remove(toRemove);
+		} 
+		
+		else {	
+			if (!toRemove.children.isEmpty()) {
+				nodes.set(0, toRemove.children.get(0)); 		//promote first child
+				for (int i = 1; i < toRemove.children.size(); i++) {		//for each child of the node to remove
+					nodes.get(0).addChild(toRemove.children.get(i));	//add the rest of the children to the new root
+				}
+			} 
+			
+			else {
+				nodes.remove(toRemove);
 			}
 		}
+		nodes.remove(toRemove);
 	}
+	
 
 	@Override
 	public void showOrgChartDepthFirst() {
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
 		System.out.println("Displaying Depth Org Chart");
-
-		// Start depth-first traversal from the root node
-		depthFirstTraversal(nodes.get(0));
+	
+		if (!nodes.isEmpty()) {
+			depthFirstTraversal(nodes.get(0));
+		}
+		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
+		System.out.println();
 	}
+	
+	private void depthFirstTraversal(GenericTreeNode<Employee> node) {
+		System.out.println(node.data); 											//Print the current node
 
-	private void depthFirstTraversal(GenericTreeNode<Employee> node) { // Print the current node
-		System.out.println(node.data);
-
-		if (node.children != null) { // Check if the node has children
-			
-			for (GenericTreeNode<Employee> child : node.children) { // Recursively traverse each child
-
+		if (node.children != null) { 											//Recursively traverse each child
+			for (GenericTreeNode<Employee> child : node.children) {
 				depthFirstTraversal(child);
 			}
 		}
@@ -65,13 +113,23 @@ public class OrgChartImpl implements OrgChart{
 	public void showOrgChartBreadthFirst() {
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
 		System.out.println("Displaying Breadth Org Chart");
-		for (GenericTreeNode<Employee> node : nodes) {							//for each node in the list of nodes
-			System.out.println(node.data);										//print the node's data
-			for (GenericTreeNode<Employee> child : node.children) {				//for each child of the node
-				System.out.print(child.data + "   ");							//print the child's data
+	
+		if (nodes.isEmpty()) return;
+	
+		Queue<GenericTreeNode<Employee>> queue = new LinkedList<>();
+		queue.add(nodes.get(0)); // start from root
+	
+		while (!queue.isEmpty()) {
+			GenericTreeNode<Employee> current = queue.poll();
+			System.out.println(current.data);
+	
+			if (current.children != null) {
+				for (GenericTreeNode<Employee> child : current.children) {
+					queue.add(child);
+				}
 			}
 		}
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
-		System.out.println(" ");
+		System.out.println();
 	}
 }
