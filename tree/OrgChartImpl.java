@@ -90,23 +90,28 @@ public class OrgChartImpl implements OrgChart{
 	public void showOrgChartDepthFirst() {
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
 		System.out.println("Displaying Depth Org Chart");
-	
+
 		if (!nodes.isEmpty()) {
-			depthFirstTraversal(nodes.get(0));
+			depthFirstTraversal(nodes.get(0), 0);
 		}
+		System.out.println();
 		System.out.println("-=-=-=-=-=-=-=-=-=-=-=");
 		System.out.println();
 	}
-	
-	private void depthFirstTraversal(GenericTreeNode<Employee> node) {
-		System.out.println(node.data); 											//Print the current node
 
-		if (node.children != null) { 											//Recursively traverse each child
+	private void depthFirstTraversal(GenericTreeNode<Employee> node, int depth) {
+		if (depth == 0) {
+			System.out.print(node.data); 							// Print root node without a newline
+		} else {
+			System.out.print(node.data + "     "); 				// Print child nodes inline
+		}
+
+		if (node.children != null && !node.children.isEmpty()) {
+			System.out.println(); // Move to the next row for children
 			for (GenericTreeNode<Employee> child : node.children) {
-				depthFirstTraversal(child);
+				depthFirstTraversal(child, depth + 1);
 			}
 		}
-		
 	}
 
 	@Override
@@ -117,7 +122,7 @@ public class OrgChartImpl implements OrgChart{
 		if (nodes.isEmpty()) return;
 	
 		Queue<GenericTreeNode<Employee>> queue = new LinkedList<>();
-		queue.add(nodes.get(0)); // start from root
+		queue.add(nodes.get(0)); 									// start from root
 	
 		while (!queue.isEmpty()) {
 			GenericTreeNode<Employee> current = queue.poll();
