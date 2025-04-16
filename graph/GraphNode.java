@@ -59,5 +59,17 @@ public class GraphNode {
 		paths.put(neighbor, weight);
 		return true;
 	}
+
+
+	public Object printNeighbors() {
+		System.out.println("Neighbors of " + value + ": ");
+		if (paths.isEmpty()) System.out.println("---- no neighbors ----");
+		else {
+			for (GraphNode node : paths.keySet()) {
+				System.out.println(node.getValue() + " with weight " + paths.get(node));
+			}
+		}
+		return null;
+	}
 	
 }

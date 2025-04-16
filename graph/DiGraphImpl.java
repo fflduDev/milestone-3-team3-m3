@@ -42,89 +42,137 @@ public class DiGraphImpl implements DiGraph{
 
 	@Override
 	public String getNodeValue(GraphNode node) {
-
+		if (nodeList.contains(node)) { 										//Check if the node already exists
+			return node.getValue(); 										//Return the value of the node
 		}
-
+		return null;														//If the node does not exist return null
 	}
 
 	@Override
 	public Boolean addEdge(GraphNode fromNode, GraphNode toNode, Integer weight) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'addEdge'");
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			fromNode.addNeighbor(toNode, weight);							//Add the edge to the fromNode
+			return true;													//Return true
+		}
+		return false;														//If either node does not exist return false
 	}
 
 	@Override
 	public Boolean addEdgeStr(String fromNodeValue, String toNodeValue, Integer weight) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'addEdgeStr'");
+		GraphNode fromNode = getNode(fromNodeValue);
+		GraphNode toNode = getNode(toNodeValue);							//Get the toNode
+		if (fromNode != null && toNode != null) {							//Check if both nodes exist
+			fromNode.addNeighbor(toNode, weight);							//Add the edge to the fromNode
+			return true;													//Return true
+		}
+		return false;														//If either node does not exist return false
 	}
 
 	@Override
 	public Boolean removeEdge(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'removeEdge'");
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			fromNode.removeNeighbor(toNode);								//Remove the edge from the fromNode
+			return true;													//Return true
+		}
+		return false;														//If either node does not exist return false
 	}
 
 	@Override
 	public Boolean setEdgeValue(GraphNode fromNode, GraphNode toNode, Integer newWeight) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'setEdgeValue'");
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			fromNode.addNeighbor(toNode, newWeight);						//Set the new weight of the edge
+			return true;													//Return true
+		}
+		return false; 														//If either node does not exist return false
 	}
 
 	@Override
 	public Integer getEdgeValue(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getEdgeValue'");
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			return fromNode.getDistanceToNeighbor(toNode);					//Return the weight of the edge
+		}
+		return null;														//If either node does not exist return null
 	}
 
 	@Override
-	public List<GraphNode> getAdjacentNodes(GraphNode node) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getAdjacentNodes'");
+	public List<GraphNode> getAdjacentNodes(GraphNode node) {		//Never Used
+		if (nodeList.contains(node)) { 										//Check if the node already exists
+			return node.getNeighbors(); 									//Return the neighbors of the node
+		}
+		return null;														//If the node does not exist return null
 	}
 
 	@Override
 	public Boolean nodesAreAdjacent(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'nodesAreAdjacent'");
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			return fromNode.getNeighbors().contains(toNode);				//Check if the toNode is a neighbor of the fromNode
+		}
+		return false;														//If either node does not exist return false
 	}
 
 	@Override
 	public Boolean nodeIsReachable(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'nodeIsReachable'");
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			return fromNode.getNeighbors().contains(toNode);				//Check if the toNode is a neighbor of the fromNode
+		}
+		return false;														//If either node does not exist return false
 	}
 
 	@Override
 	public Boolean hasCycles() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'hasCycles'");
+		for (GraphNode node : nodeList) {									//For each node in the list
+			if (node.getNeighbors().contains(node)) {						//Check if the node is a neighbor of itself
+				return true;												//If it is, return true
+			}
+		}
+		return false;														//If no cycles are found, return false
 	}
 
 	@Override
 	public List<GraphNode> getNodes() {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getNodes'");
+		if (nodeList.isEmpty()) { 											//Check if the list is empty
+			return null;													//If it is, return null
+		}
+		return nodeList;													//Return the list of nodes
 	}
 
 	@Override
 	public GraphNode getNode(String nodeValue) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'getNode'");
+		for (GraphNode node : nodeList) {									//For each node in the list
+			if (node.getValue().equals(nodeValue)) {						//Check if the node value matches the given value
+				return node;												//If it does, return the node
+			}
+		}
+		return null;														//If no match is found, return null
 	}
 
 	@Override
-	public int fewestHops(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'fewestHops'");
+	public int getFewestHopsPath(GraphNode fromNode, GraphNode toNode) {
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			return fromNode.getNeighbors().size();							//Return the number of neighbors of the fromNode
+		}
+		return -1;															//If either node does not exist return -1
+	}
+	
+	@Override
+	public int getShortestPath(GraphNode fromNode, GraphNode toNode) {
+		if (nodeList.contains(fromNode) && nodeList.contains(toNode)) {		//Check if both nodes exist
+			return fromNode.getDistanceToNeighbor(toNode);					//Return the weight of the edge between the two nodes
+		}
+		return -1;															//If either node does not exist return -1
 	}
 
 	@Override
-	public int shortestPath(GraphNode fromNode, GraphNode toNode) {
+	public List<GraphNode> shortestPath(GraphNode fromNode, GraphNode toNode) {
 		// TODO Auto-generated method stub
 		throw new UnsupportedOperationException("Unimplemented method 'shortestPath'");
 	}
+
+	@Override
+	public List<GraphNode> fewestHops(GraphNode fromNode, GraphNode toNode) {		//Method that finds the fewest hops between two nodes
+		// TODO Auto-generated method stub
+		throw new UnsupportedOperationException("Unimplemented method 'fewestHops'");
+	}
 	
-	
-	
+
 }

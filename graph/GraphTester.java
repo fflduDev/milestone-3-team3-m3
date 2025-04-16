@@ -23,6 +23,15 @@ public class GraphTester {
 			System.out.println(String.join(" -> ", pathStr));
 		}
 	}
+
+	public static void printPathInt(int path) {
+		System.out.println("Path is:");
+		if (path == -1) System.out.println("---- no path found ----");
+		else {
+			System.out.println(path);
+		}
+	}
+
 	
 	public static void main(String[] args) {	
 		graph = new DiGraphImpl();
@@ -65,11 +74,11 @@ public class GraphTester {
 		
 		//test fewest hops
 		System.out.println("Fewest hop from G to B is: " + graph.fewestHops(new GraphNode("G"), new GraphNode("B")));
-		printPath(graph.getFewestHopsPath(new GraphNode("G"), new GraphNode("B")));
+		printPathInt(graph.getFewestHopsPath(new GraphNode("G"), new GraphNode("B")));
 		
 		//test shortest path
 		System.out.println("Shortest from G to B is: " + graph.shortestPath(new GraphNode("G"), new GraphNode("B"))); 
-		printPath(graph.getShortestPath(new GraphNode("G"), new GraphNode("B")));
+		printPathInt(graph.getShortestPath(new GraphNode("G"), new GraphNode("B")));
 	}
 	
 }
