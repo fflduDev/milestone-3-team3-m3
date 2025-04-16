@@ -2,6 +2,7 @@ package graph;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
  
 
 public class DiGraphImpl implements DiGraph{
@@ -164,8 +165,13 @@ public class DiGraphImpl implements DiGraph{
 
 	@Override
 	public List<GraphNode> shortestPath(GraphNode fromNode, GraphNode toNode) {
-		// TODO Auto-generated method stub
-		throw new UnsupportedOperationException("Unimplemented method 'shortestPath'");
+	    if (!nodeList.contains(fromNode) || !nodeList.contains(toNode)) {	//Check if both nodes exist
+	        return null;
+	    }
+
+	    Map<GraphNode, Integer> distances = new java.util.HashMap<>();		//Create a map to store distances from the source node
+	    Map<GraphNode, GraphNode> previous = new java.util.HashMap<>();		//Create a map to store the previous node in the shortest path
+	    List<GraphNode> unvisited = new ArrayList<>(nodeList);				//Create a list of unvisited nodes
 	}
 
 	@Override
